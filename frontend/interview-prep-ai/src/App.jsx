@@ -10,7 +10,19 @@ import InterviewPrep from "./pages/InterviewPrep/InterviewPrep";
 
 const App = () => {
   return (
-    <div>App</div>
+    <div>
+      <Router>
+        <Route>
+          {/* Default Route */}
+          <Route path="/" element={<LandingPage />} />
+
+          <Route path="/login" element={<Login />} />
+          <Route path="/signUp" element={<SignUp />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/interview-prep/:sessionId" element={<InterviewPrep />} />
+        </Route>
+      </Router>
+  </div>
   )
 }
 
