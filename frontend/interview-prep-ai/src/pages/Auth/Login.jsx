@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import Input from '../../components/Inputs/Input';
+import { validateEmail } from '../../utils/helper';
 
 const Login = ({ setCurrentPage }) => {
   const [email, setEmail] = useState("");
@@ -18,7 +19,7 @@ const Login = ({ setCurrentPage }) => {
       return;
     }
 
-    if (!validatePassword(password)) {
+    if (!password) {
       setError("Pleas enter the password.");
       return;
     }
@@ -27,6 +28,7 @@ const Login = ({ setCurrentPage }) => {
 
     // Login API Call
     try{
+      
     } catch (error) {
       if(error.response && error.response.data.message) {
         setError(error.response.data.message);
