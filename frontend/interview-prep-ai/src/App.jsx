@@ -10,13 +10,13 @@ const App = () => {
   return (
     <div>
       <Router>
-        <Route>
+        <Routes>
           {/* Default Route */}
           <Route path="/" element={<LandingPage />} />
 
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/interview-prep/:sessionId" element={<InterviewPrep />} />
-        </Route>
+        </Routes>
       </Router>
 
       <Toaster

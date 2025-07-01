@@ -5,6 +5,8 @@ import { APP_FEATURES } from "../utils/data";
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { LuSparkles } from "react-icons/lu";
 import Modal from '../components/Modal';
+import Login from './Auth/Login';
+import SignUp from './Auth/SignUp';
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -20,7 +22,7 @@ const LandingPage = () => {
         <div className="w-[500px] h-[500px] bg-amber-200/20 blur-[65px] absolute top-0 left-0"/>
 
         <div className='container mx-auto px-4 pt-6 pb-[200px] relative z-10'>
-          {/* Header */}
+          {/* Header */} 
           <header className='flex justify-between items-center mb-16'>
             <div className='text-xl text-black font-bold'>
               Interview Prep AI
@@ -91,7 +93,7 @@ const LandingPage = () => {
               <div className='flex flex-col items-center gap-8'>
                 {/* First 3 cards */}
                 <div className='grid grid-cols-1 md:grid-cols-3 gap-8 w-full'>
-                  {APP_FEATURES.slice(0, 3).map((feature) => {
+                  {APP_FEATURES.slice(0, 3).map((feature) => (
                     <div
                       key={feature.id}
                       className='bg-[#FFFEF8] p-6 rounded-xl shadow-xs hover:shadow-lg shadow-amber-100 transform-border border-amber-100'
@@ -101,7 +103,7 @@ const LandingPage = () => {
                       </h3>
                       <p className='text-gray-600'>{feature.description}</p>
                     </div>
-                  })}
+                  ))}
                 </div>
 
                 {/* Remaining 2 Cards */}
