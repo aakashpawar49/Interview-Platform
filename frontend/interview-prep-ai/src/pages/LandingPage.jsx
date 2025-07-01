@@ -4,6 +4,7 @@ import HERO_IMG from "../assets/hero-img.png";
 import { APP_FEATURES } from "../utils/data";
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { LuSparkles } from "react-icons/lu";
+import Modal from '../components/Modal';
 
 const LandingPage = () => {
   const navigate = useNavigate();
