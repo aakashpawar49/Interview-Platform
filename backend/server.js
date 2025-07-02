@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
+const connectDB = require("./config/db");
 
 const app = express();
 
@@ -13,6 +14,8 @@ app.use(
         allowedHeaders: ["Content-Type", "Authorization"],
     })
 );
+
+connectDB()
 
 // Middleware
 app.use(express.json());
