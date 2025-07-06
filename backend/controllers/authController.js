@@ -49,14 +49,46 @@ const registerUser = async (req, res) => {
 // @route   POST /api/auth/login
 // @access  Public
 const loginUser = async (req, res) => {
-    res.send("Login route works");
+    try {
+        const { email, password } = req.body;
+
+        const user = await User.findOne({ email });
+        if(!user) {
+            return res.status(500).json({ message: "Invalid email or password" });
+        }
+
+        //Compare password
+        const isMatch = await bcrypt.compare(password, user.password);
+        if(!isMatch){
+            return res.status(500).json({ message: "Server error ", error: error.message });
+        }
+
+        // Return user data with JWT
+        res.json({
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            profileImageUrl: user.profileImageUrl,
+            token: generateToken(user._id),
+        });
+    } catch (error) {
+        res.status(500).json({ message: "Server error" , error: error.message });
+    }
 };
 
 // @desc    Get user profile
 // @route   POST /api/auth/profile
 // @access  Public
 const getUserProfile = async (req, res) => {
-    res.send("Profile route works");
+    try {
+        const user = await User.findById(req.user.id).select("-password");
+        if (!user){
+            return res.status(404).json({ message: "User not found "});
+        }
+        res.json(user);
+    } catch (error) {
+        res.status(500).json({ message: "Server error" , error: error.message });
+    }
 };
 
 module.exports = { registerUser, loginUser, getUserProfile };
