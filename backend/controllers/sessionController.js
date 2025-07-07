@@ -43,11 +43,12 @@ exports.createSession = async (req, res) => {
 // @access Private
 exports.getMySessions = async (req, res) => {
     try {
-        const userId = req.user._id;
-        const sessions = await Session.find({ user: userId });
-        res.status(200).json({ success: true, sessions });
+        const sessions = await Session.find({ user: req.user.id })
+            .sort({ createdAt: -1 })
+            .populate("questions");
+        res.status(200).json(sessions);
     } catch (error) {
-        res.status(500).json({ success: false, message: "Server Error: " + error.message });
+        res.status(500).json({ success: false, message: "Server Error" });
     }
 };
 
@@ -56,14 +57,19 @@ exports.getMySessions = async (req, res) => {
 // @access Private
 exports.getSessionById = async (req, res) => {
     try {
-        const sessionId = req.params.id;
-        if (!sessionId.match(/^[0-9a-fA-F]{24}$/)) {
-            return res.status(400).json({ success: false, message: "Invalid session ID" });
-        }
-        const session = await Session.findById(sessionId).populate('questions');
+        const session = await Session.findById(req.params.id)
+        .populate({
+            path: "questions",
+            options: { sort: { isPinned: -1, createdAt: 1 } },
+        })
+        .exec();
+
         if (!session) {
-            return res.status(404).json({ success: false, message: "Session not found" });
+            return res
+                .status(404)
+                .json({ success: false, message: "Session not found" });
         }
+
         res.status(200).json({ success: true, session });
     } catch (error) {
         res.status(500).json({ success: false, message: "Server Error: " + error.message });
@@ -75,19 +81,26 @@ exports.getSessionById = async (req, res) => {
 // @access Private
 exports.deleteSession = async (req, res) => {
     try {
-        const sessionId = req.params.id;
-        if (!sessionId.match(/^[0-9a-fA-F]{24}$/)) {
-            return res.status(400).json({ success: false, message: "Invalid session ID" });
-        }
-        const session = await Session.findById(sessionId);
+        const session = await Session.findById(req.params.id);
+
         if (!session) {
-            return res.status(404).json({ success: false, message: "Session not found" });
+            return res.status(404).json({  message: "Session not found" });
         }
-        // Delete all questions linked to this session
-        await Question.deleteMany({ session: sessionId });
-        // Delete the session
-        await session.remove();
-        res.status(200).json({ success: true, message: "Session and linked questions deleted" });
+
+        // Check if the logged-in user owns this session
+        if (session.user.toString() !== req.user.id) {
+            return res
+                .status(401)
+                .json({ message: "Not authorized to delete this session "});
+        }
+
+        //  First, delete all the questions linked to this session
+        await Question.deleteMany({ session: session._id});
+
+        // Then, delete the session
+        await session.deleteOne();
+        
+        res.status(200).json({ success: true, message: "Session deleted successfully" });
     } catch (error) {
         res.status(500).json({ success: false, message: "Server Error: " + error.message });
     }
