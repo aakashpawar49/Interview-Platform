@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import Input from '../../components/Inputs/Input';
 import { validateEmail } from '../../utils/helper';
+import axiosInstance from '../../utils/axiosInstance';
+import { API_PATHS } from '../../utils/apiPaths';
 
 const Login = ({ setCurrentPage }) => {
   const [email, setEmail] = useState("");
@@ -28,7 +30,17 @@ const Login = ({ setCurrentPage }) => {
 
     // Login API Call
     try{
-      
+      const response = await axiosInstance.post(API_PATHS.AUTH.LOGIN, {
+        email,
+        password,
+      });
+
+      const { token } = response.data;
+
+      if(token) {
+        localStorage.setItem("token", token);
+        navigate("/dashboard");
+      }
     } catch (error) {
       if(error.response && error.response.data.message) {
         setError(error.response.data.message);
