@@ -2,7 +2,7 @@ import React, { createContext, useEffect, useState, useeffect } from 'react';
 import axiosInstance from '../utils/axiosInstance';
 import { API_PATHS } from '../utils/apiPaths';
 
-export const userContext = createContext();
+export const UserContext = createContext();
 
 const UserProvider = ({ children }) => {
     const [user, setUser] = useState(null);
@@ -43,9 +43,9 @@ const UserProvider = ({ children }) => {
     };
 
     return (
-        <userContext.Provider value={{ user, loading, updateUser, clearUser }}>
+        <UserContext.Provider value={{ user, loading, updateUser, clearUser }}>
             {children}
-        </userContext.Provider>
+        </UserContext.Provider>
     );
 }
 

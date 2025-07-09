@@ -4,14 +4,14 @@ import Input from '../../components/Inputs/Input';
 import { validateEmail } from '../../utils/helper';
 import axiosInstance from '../../utils/axiosInstance';
 import { API_PATHS } from '../../utils/apiPaths';
-import { userContext } from '../../context/userContext';
+import { UserContext } from '../../context/userContext';
 
 const Login = ({ setCurrentPage }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
 
-  const { updateUser } = useContext(userContext);
+  const { updateUser } = useContext(UserContext);
 
   const navigate = useNavigate();
 
