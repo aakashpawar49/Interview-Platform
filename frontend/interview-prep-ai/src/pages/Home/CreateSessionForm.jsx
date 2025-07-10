@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import Input from "../../components/Inputs/Input";
+import SpinnerLoader from '../../components/Loader/SpinnerLoader';
+import { API_PATHS } from '../../utils/apiPaths';
 
 const CreateSessionForm = () => {
     const [formData, setFormData] = useState({
@@ -33,17 +35,50 @@ const CreateSessionForm = () => {
         }
 
         setError("");
-    
+        setIsLoading(true);
+
+        try{
+            // Call AI API to generate questions
+            const aiResponse = await axiosInstance.post(
+              API_PATHS.AI.GENERATE_QUESTIONS,
+              {
+                role,
+                experience,
+                topicsToFocus,
+                numberOfQuestions: 10,
+              }
+            );
+
+            // Should be array like [{question, answer}, ...]
+            const generatedQuestions = aiResponse.data;
+
+            const response = await axiosInstance.post(API_PATHS.SESSION.CREATE, {
+                ...formData,
+                questions: generatedQuestions,
+            });
+
+            if (response.data?.session?._id) {
+                navigate(`/interview-prep/${response.data?.session?._id}`);
+            }
+        } catch (error) {
+            if (error.response && error.response.data.message) {
+                setError(error.response.data.message);
+            } else {
+                setError("Something went wrong Please try again. ");
+            }
+        } finally{
+            setIsLoading(false);
+        }
     };
-    return <div className=''>
-        <h3 className=''>
+    return <div className='w-[90vw] md:w-[35vw] p-7 flex flex-col justify-center'>
+        <h3 className='text-lg font-semibold text-black'>
             Start a New Interview Journey
         </h3>
-        <p className=''>
+        <p className='text-xs text-slate-700 mt-[5px] mb-3'>
             Fill out a few quick details and unlock your personalized set of
             interview questions!
         </p>
-        <form onSubmit={handleCreateSession} className=''>
+        <form onSubmit={handleCreateSession} className='flex flex-col gap-3'>
             <Input
                 value={formData.role}
                 onChange={({ target }) => handleChange("role", target.value)}
@@ -76,14 +111,14 @@ const CreateSessionForm = () => {
                 type="text"
             />
 
-            {error && <p className=''>{error}</p>}
+            {error && <p className='text-red-500 text-xs pb-2.5'>{error}</p>}
 
             <button
                 type="submit"
-                className=''
+                className="btn-primary w-full mt-2"
                 disabled={isLoading}
             >
-                Create Session
+            {isLoading && <SpinnerLoader />} Create Session
             </button>
         </form>
     </div>
