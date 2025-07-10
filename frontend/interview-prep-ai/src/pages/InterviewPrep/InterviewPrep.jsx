@@ -74,10 +74,10 @@ const InterviewPrep = () => {
         }
       />
 
-      <div className=''>
-        <h2 className=''>Interview Q & A</h2>
+      <div className='container mx-auto pt-4 pb-4 md:px-0'>
+        <h2 className='text-lg font-semibold color-black'>Interview Q & A</h2>
 
-        <div className=''>
+        <div className='grid grid-cols-12 gap-4 mt-5 mb-10'>
           <div
             className={`col-span-12 ${
               openLeanMoreDrawer ? "md:col-span-7" : "md:col-span-8"
