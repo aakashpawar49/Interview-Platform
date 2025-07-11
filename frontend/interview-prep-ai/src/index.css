@@ -10,11 +10,17 @@
 @layer base {
     html {
         font-family: var(--font-display);
+        font-size: 16px;
+        line-height: 1.5;
+        color: #1a1a1a;
+        background-color: #fcfbfc;
     }
 
     body {
         background-color: #fcfbfc;
         overflow-x: hidden;
+        margin: 0;
+        padding: 0;
     }
 }
 
@@ -83,9 +89,27 @@
 }
 
 .btn-primary {
-    @apply w-full flex items-center justify-center gap-3 text-sm font-medium text-white bg-black shadow-lg shadow-orange-600/5 p-[10px] rounded-md my-1 hover:bg-orange-600/15 hover:text-black cursor-pointer;
+    @apply w-full flex items-center justify-center gap-3 text-sm font-medium text-white bg-black shadow-lg shadow-orange-600/5 p-[10px] rounded-md my-1 hover:bg-orange-600/15 hover:text-black cursor-pointer transition-colors duration-300 ease-in-out;
 }
 
 .btn-small {
-    @apply flex items-center justify-center gap-3 bg-linear-to-r from-[#FF9324] to-[#e99a4b] text-sm font-semibold text-white px-7 py-2 rounded-lg hover:bg-black hover:text-white transition-colors cursor-pointer hover:shadow-orange-300
+    @apply flex items-center justify-center gap-3 bg-linear-to-r from-[#FF9324] to-[#e99a4b] text-sm font-semibold text-white px-7 py-2 rounded-lg hover:bg-black hover:text-white transition-colors cursor-pointer hover:shadow-orange-300;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    color: #222222;
+}
+
+p {
+    color: #444444;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
 }
