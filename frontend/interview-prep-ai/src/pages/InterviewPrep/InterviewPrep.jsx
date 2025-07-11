@@ -61,7 +61,7 @@ const InterviewPrep = () => {
         }
       );
       
-      if(response, data) {
+      if(response.data) {
         setExplanation(response.data);
       }
     } catch (error) {
@@ -186,7 +186,7 @@ const InterviewPrep = () => {
                       <QuestionCard
                         question={data?.question}
                         answer={data?.answer}
-                        onLeanMore={() => 
+                        onLearnMore={() => 
                           generateConceptExplanation(data.question)
                         }
                         isPinned={data?.isPinned}
@@ -231,7 +231,7 @@ const InterviewPrep = () => {
             )}
             {isLoading && <SkeletonLoader />}
             {!isLoading && explanation && (
-              <AIResponsePreview content={explanation.explanation?.explanation} />
+              <AIResponsePreview content={explanation.explanation} />
             )}
           </Drawer>
         </div>
