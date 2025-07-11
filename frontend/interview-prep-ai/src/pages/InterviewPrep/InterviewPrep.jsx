@@ -10,6 +10,7 @@ import axiosInstance from '../../utils/axiosInstance';
 import { API_PATHS } from '../../utils/apiPaths';
 import DashboardLayout from '../../components/layouts/DashboardLayout';
 import QuestionCard from '../../components/Cards/QuestionCard';
+import AIResponsePreview from './components/AIResponsePreview';
 
 const InterviewPrep = () => {
   const { sessionId } = useParams();
@@ -44,12 +45,25 @@ const InterviewPrep = () => {
   //Fetch session data by session id
   const toggleQuestionExplanation = async (questionId) => {};
 
-  //Fetch session data by session id
+  // Add more questions to a session
   const uploadMoreQuestions = async () => {};
 
-  const toggleQuestionPinStatus = (questionId) => {
-    // Stub function to avoid errors, implement as needed
-    console.log("Toggle pin status for question:", questionId);
+  // Pin Question
+  const toggleQuestionPinStatus = async (questionId) => {
+    try {
+      const response = await axiosInstance.post(
+        API_PATHS.QUESTION.PIN(questionId)
+      );
+
+      console.log(response);
+
+      if(response.data && response.data.question) {
+        //Toast.success('Question Pinned Successfully')
+        fetchSessionDetailsById();
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   useEffect(() => {
@@ -117,6 +131,23 @@ const InterviewPrep = () => {
               })}
             </AnimatePresence>
           </div>
+        </div>
+
+        <div>
+          <Drawer
+            isOpen={openLeanMoreDrawer}
+            onClose={() => setOpenLeanMoreDrawer(false)}
+            title={!isLoading && explanation?.title}
+          >
+            {errorMsg && (
+              <p className='flex gap-2 text-sm text-amber-600 font-medium'>
+                <LuCircleAlert className='mt-1' /> {errorMsg}
+              </p>
+            )}
+            {!isLoading && explanation && (
+              <AIResponsePreview content={explanation.explanation?.explanation} />
+            )}
+          </Drawer>
         </div>
       </div>
     </DashboardLayout>
