@@ -54,7 +54,7 @@ const Dashboard = () => {
     <DashboardLayout>
       <div className='container mx-auto pt-4 pb-4'>
         <div className='grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-7 pt-1 pb-6 px-4 md:px-0'>
-          {session?.map((data, index) => {
+          {session?.map((data, index) => (
             <SummaryCard
               key={data?._id}
               colors={CARD_BG[index % CARD_BG.length]}
@@ -71,7 +71,7 @@ const Dashboard = () => {
               onSelect={() => navigate(`/interview-prep/${data?._id}`)}
               onDelete={() => setOpenDeleteAlert({ open: true, data })}
             />
-          })}
+          ))}
         </div>
 
         <button
