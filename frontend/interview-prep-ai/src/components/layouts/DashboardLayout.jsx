@@ -4,7 +4,7 @@ import Navbar from './Navbar';
 
 
 
-const DashboardLayout = () => {
+const DashboardLayout = ({ children }) => {
   const {user} = useContext(UserContext);
   return (
     <div>
