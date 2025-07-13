@@ -1,0 +1,43 @@
+name: CI/CD Pipeline for Interview Platform
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ⬇️ Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: ⚙️ Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: 📦 Install Frontend Dependencies
+        working-directory: frontend/interview-prep-ai
+        run: npm install
+
+      - name: 🛠 Build Frontend
+        working-directory: frontend/interview-prep-ai
+        run: npm run build
+
+      - name: 🚀 Deploy to Vercel (Frontend)
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          working-directory: frontend/interview-prep-ai
+          prod: true
+
+      - name: 🔁 Trigger Render Deployment (Backend)
+        run: |
+          curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
