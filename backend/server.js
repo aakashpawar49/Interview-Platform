@@ -37,6 +37,18 @@ app.use("/api/ai/generate-explanation", protect, generateConceptExplanation);
 // Serve uploads folder
 app.use("/uploads", express.static(path.join(__dirname, "uploads"), {}));
 
+  
+// Serve frontend static files
+app.use(express.static(path.join(__dirname, "../frontend/interview-prep-ai/dist")));
+
+// Catch-all route to serve index.html for non-API routes
+app.get("*", (req, res) => {
+  if (req.path.startsWith("/api")) {
+    return res.status(404).send("API route not found");
+  }
+  res.sendFile(path.join(__dirname, "../frontend/interview-prep-ai/dist/index.html"));
+});
+
 // Start Server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
