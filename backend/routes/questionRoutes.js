@@ -5,7 +5,7 @@ const { protect } = require('../middlewares/authMiddleware');
 const router = express.Router();
 
 router.post('/add', protect, addQuestionsToSession);
-router.post('/:id/pin', protect, togglePinQuestion);
-router.post('/:id/note', protect, updateQuestionNote);
+router.post('/questions/:id/pin', protect, togglePinQuestion);
+router.post('/questions/:id/note', protect, updateQuestionNote);
 
 module.exports = router;
