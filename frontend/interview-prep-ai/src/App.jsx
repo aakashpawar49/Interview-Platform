@@ -6,6 +6,7 @@ import LandingPage from "./pages/LandingPage";
 import Dashboard from "./pages/Home/Dashboard";
 import InterviewPrep from "./pages/InterviewPrep/InterviewPrep";
 import UserProvider from './context/userContext';
+import ProtectedRoute from './components/ProtectedRoute';
 
 const App = () => {
   return (
@@ -16,8 +17,8 @@ const App = () => {
             {/* Default Route */}
             <Route path="/" element={<LandingPage />} />
 
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/interview-prep/:sessionId" element={<InterviewPrep />} />
+            <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+            <Route path="/interview-prep/:sessionId" element={<ProtectedRoute><InterviewPrep /></ProtectedRoute>} />
           </Routes>
         </Router>
 
