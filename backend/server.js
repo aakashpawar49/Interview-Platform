@@ -14,14 +14,14 @@ const app = express();
 
 // Middleware to handle CORS
 app.use(
-    cors({
-        origin: "*",
-        methods: ["GET", "POST", "PUT", "DELETE"],
-        allowedHeaders: ["Content-Type", "Authorization"],
-    })
+  cors({
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
 );
 
-connectDB()
+connectDB();
 
 // Middleware
 app.use(express.json());
@@ -31,17 +31,16 @@ app.use("/api/auth", authRoutes);
 app.use("/api/sessions", sessionRoutes);
 app.use("/api/questions", questionRoutes);
 
-app.use("/api/ai/generate-questions", protect, generateInterviewQuestions);
-app.use("/api/ai/generate-explanation", protect, generateConceptExplanation);
+app.post("/api/ai/generate-questions", protect, generateInterviewQuestions);
+app.post("/api/ai/generate-explanation", protect, generateConceptExplanation);
 
-// Serve uploads folder
-app.use("/uploads", express.static(path.join(__dirname, "uploads"), {}));
+// Serve uploads folder (✅ fixed)
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-  
 // Serve frontend static files
 app.use(express.static(path.join(__dirname, "../frontend/interview-prep-ai/dist")));
 
-// Catch-all route to serve index.html for non-API routes
+// Catch-all route to serve index.html for non-API routes (✅ fixed)
 app.get("*", (req, res) => {
   if (req.path.startsWith("/api")) {
     return res.status(404).send("API route not found");
