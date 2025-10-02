@@ -40,9 +40,11 @@ const Login = ({ setCurrentPage }) => {
 
       const { token } = response.data;
 
+      console.log("Login successful, response.data:", response.data);
       if (token) {
         localStorage.setItem("token", token);
         updateUser(response.data);
+        console.log("Navigating to /dashboard");
         navigate("/dashboard");
       }
     } catch (error) {

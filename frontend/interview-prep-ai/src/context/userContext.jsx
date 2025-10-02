@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useState, useeffect } from 'react';
+import React, { createContext, useEffect, useState } from 'react';
 import axiosInstance from '../utils/axiosInstance';
 import { API_PATHS } from '../utils/apiPaths';
 
@@ -9,16 +9,18 @@ const UserProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);     // New state to track loading
 
     useEffect(() => {
-        if (user) return;
-
         const accessToken = localStorage.getItem("token");
+        console.log("userContext useEffect: accessToken =", accessToken);
         if (!accessToken) {
+            console.log("No token, setting loading to false");
             setLoading(false);
             return;
         }
         const fetchUser = async () => {
+            console.log("Fetching user profile...");
             try{
                 const response = await axiosInstance.get(API_PATHS.AUTH.GET_PROFILE);
+                console.log("User profile fetched:", response.data);
                 setUser(response.data);
             } catch (error) {
                 console.error("User not authenticated" ,error);
@@ -32,6 +34,7 @@ const UserProvider = ({ children }) => {
     }, []);
 
     const updateUser = (userData) => {
+        console.log("updateUser called with:", userData);
         setUser(userData);
         localStorage.setItem("token", userData.token);  // Save token
         setLoading(false);

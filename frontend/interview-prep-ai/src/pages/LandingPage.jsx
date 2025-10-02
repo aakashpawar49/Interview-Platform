@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 
 import HERO_IMG from "../assets/hero-img.png";
 import { APP_FEATURES } from "../utils/data";
