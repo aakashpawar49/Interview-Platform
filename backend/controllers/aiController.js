@@ -23,14 +23,13 @@ const generateInterviewQuestions = async (req, res) => {
 
         let rawText = response.text;
 
-        // Clean it: Remove ```json and ``` from beginning and end
-        const cleanedText = rawText
-           .replace(/^```json\s*/, "")  // remove starting ```json
-           .replace(/```$/, "")         // remove ending ```
-           .trim();                     // remove extra spaces
+        // Extract JSON from the response (object or array)
+        const jsonMatch = rawText.match(/(\{[\s\S]*\}|\[[\s\S]*\])/);
+        if (!jsonMatch) {
+            throw new Error("No valid JSON found in AI response");
+        }
 
-           // Now safe to parse
-           const data = JSON.parse(cleanedText);
+        const data = JSON.parse(jsonMatch[0]);
 
            res.status(200).json(data);
     } catch (error) {
@@ -61,14 +60,13 @@ const generateConceptExplanation = async (req, res) => {
 
         let rawText = response.text;
 
-        // Clean it: Remove ```json and ``` from beginning and end
-        const cleanedText = rawText
-            .replace(/^```json\s*/, "")   // remove starting ```json
-            .replace(/```$/, "")          // remove ending ```
-            .trim();                      // remove extra spaces
-            
-            // Now safe to parse
-            const data = JSON.parse(cleanedText);
+        // Extract JSON from the response
+        const jsonMatch = rawText.match(/\{[\s\S]*\}/);
+        if (!jsonMatch) {
+            throw new Error("No valid JSON found in AI response");
+        }
+
+        const data = JSON.parse(jsonMatch[0]);
 
             res.status(200).json(data);
     } catch (error) {
