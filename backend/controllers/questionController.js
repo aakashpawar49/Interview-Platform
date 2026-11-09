@@ -1,5 +1,5 @@
 const Question = require('../models/Question');
-const Session = require('../models/Sessions');
+const Session = require('../models/Session');
 
 // @desc  Add additional questions to an existing session
 // @route POST /api/questions/add

@@ -3,6 +3,9 @@ const { conceptExplainPrompt, questionAnswerPrompt } = require("../utils/prompts
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
+// gemini-2.0-flash-lite was shut down on 2026-06-01; override via GEMINI_MODEL
+const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-3.1-flash-lite";
+
 // @desc   Generate interview questions and answers using Gemini 
 // @route  POST /api/ai/generate-questions
 // @access Private
@@ -17,8 +20,9 @@ const generateInterviewQuestions = async (req, res) => {
         const prompt = questionAnswerPrompt(role, experience, topicsToFocus, numberOfQuestions);
 
         const response = await ai.models.generateContent({
-            model: "gemini-2.0-flash-lite",
+            model: GEMINI_MODEL,
             contents: prompt,
+            config: { responseMimeType: "application/json" },
         });
 
         let rawText = response.text;
@@ -54,8 +58,9 @@ const generateConceptExplanation = async (req, res) => {
         const prompt = conceptExplainPrompt(question);
 
         const response = await ai.models.generateContent({
-            model: "gemini-2.0-flash-lite",
+            model: GEMINI_MODEL,
             contents: prompt,
+            config: { responseMimeType: "application/json" },
         });
 
         let rawText = response.text;

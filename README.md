@@ -79,6 +79,7 @@ interview-platform/
 ├── README.md
 ├── SECURITY.md
 ├── backend/
+│   ├── .env.example
 │   ├── .gitignore
 │   ├── package-lock.json
 │   ├── package.json
@@ -96,20 +97,18 @@ interview-platform/
 │   │   └── uploadMiddleware.js
 │   ├── models/
 │   │   ├── Question.js
-│   │   ├── Sessions.js
+│   │   ├── Session.js
 │   │   └── User.js
 │   ├── routes/
 │   │   ├── authRoutes.js
 │   │   ├── questionRoutes.js
 │   │   └── sessionRoutes.js
-│   ├── uploads/
-│   │   ├── 1751908148628-fff.jpg
-│   │   ├── 1751908361473-ss.jpg
-│   │   └── 1759653237628-art.jpg
+│   ├── uploads/            # profile images (created automatically)
 │   └── utils/
 │       └── prompts.js
 └── frontend/
     └── interview-prep-ai/
+        ├── .env.example
         ├── .gitignore
         ├── eslint.config.js
         ├── index.html
@@ -142,11 +141,11 @@ interview-platform/
             │   │   ├── DashboardLayout.jsx
             │   │   ├── Footer.jsx
             │   │   └── Navbar.jsx
-            │   ├── Loader/
-            │   │   ├── SkeletonLoader.jsx
-            │   │   └── SpinnerLoader.jsx
-            │   └── context/
-            │       └── userContext.jsx
+            │   └── Loader/
+            │       ├── SkeletonLoader.jsx
+            │       └── SpinnerLoader.jsx
+            ├── context/
+            │   └── userContext.jsx
             ├── pages/
             │   ├── LandingPage.jsx
             │   ├── Auth/
@@ -160,12 +159,12 @@ interview-platform/
             │       └── components/
             │           ├── AIResponsePreview.jsx
             │           └── RoleInfoHeader.jsx
-            ├── utils/
-            │   ├── apiPaths.js
-            │   ├── axiosInstance.js
-            │   ├── data.js
-            │   ├── helper.js
-            │   └── uploadImage.js
+            └── utils/
+                ├── apiPaths.js
+                ├── axiosInstance.js
+                ├── data.js
+                ├── helper.js
+                └── uploadImage.js
 ```
 
 ## ⚛️ Major React Hooks and Functions
@@ -239,29 +238,63 @@ The application extensively uses React hooks for state management, side effects,
 
 ## ⚙️ Installation & Setup
 
+### Prerequisites
+- Node.js 20.19+ or 22.12+ (required by Vite 7)
+- A MongoDB database (local install or a free MongoDB Atlas cluster)
+- A Google Gemini API key from https://aistudio.google.com/apikey
+
 ### 1️⃣ Clone the repository
 ```bash
 git clone https://github.com/<your-username>/interview-prep-ai.git
 cd interview-prep-ai
 ```
 
-## 2️⃣ Setup the Backend
-```
+### 2️⃣ Setup the Backend
+```bash
 cd backend
 npm install
-npm start
+cp .env.example .env   # then edit .env with your own values
+npm run dev            # or: npm start
 ```
 
-## 3️⃣ Setup the Frontend
-```
-cd ../frontend/interview-prep-ai
+| Variable         | Required | Description                                                        |
+|------------------|----------|--------------------------------------------------------------------|
+| `PORT`           | No       | Port for the API server (default `8000`)                           |
+| `MONGO_URI`      | Yes      | MongoDB connection string                                          |
+| `JWT_SECRET`     | Yes      | Long random string used to sign login tokens                       |
+| `GEMINI_API_KEY` | Yes      | Google Gemini API key                                              |
+| `GEMINI_MODEL`   | No       | Gemini model name (default `gemini-3.1-flash-lite`)                |
+| `CLIENT_URL`     | No       | Comma-separated allowed CORS origins (empty = allow all)           |
+
+The server stops at startup with a clear message if a required variable is missing.
+
+### 3️⃣ Setup the Frontend
+Open a second terminal from the project root:
+```bash
+cd frontend/interview-prep-ai
 npm install
-npm start
+cp .env.example .env   # points the app at http://localhost:8000
+npm run dev
 ```
+
+| Variable            | Required | Description                                                                  |
+|---------------------|----------|------------------------------------------------------------------------------|
+| `VITE_API_BASE_URL` | No       | Backend URL, no trailing slash. Defaults to `http://localhost:8000` in dev and to the same origin in production builds |
+
 ```
 Frontend: http://localhost:5173
-Backend: http://localhost:8000
+Backend:  http://localhost:8000
 ```
+
+> On Windows (Command Prompt / PowerShell) use `copy .env.example .env` instead of `cp`.
+
+### 4️⃣ Production (single server, optional)
+Build the frontend, then start the backend. The backend serves the built app from `frontend/interview-prep-ai/dist` on the same port:
+```bash
+cd frontend/interview-prep-ai && npm run build
+cd ../../backend && npm start
+```
+For split deployments (e.g. frontend and backend as separate Vercel projects), set `VITE_API_BASE_URL` on the frontend to the backend URL and `CLIENT_URL` on the backend to the frontend URL.
 
 ## 🚀 Future Enhancements
 

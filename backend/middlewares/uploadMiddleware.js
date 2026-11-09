@@ -1,9 +1,15 @@
+const fs = require('fs');
+const path = require('path');
 const multer = require('multer');
 
-//COnfigure storage
+// Absolute path so uploads work no matter where the server is started from
+const UPLOAD_DIR = path.join(__dirname, '..', 'uploads');
+
+// Configure storage
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'uploads/');
+        // multer does not create the folder when destination is a function
+        fs.mkdir(UPLOAD_DIR, { recursive: true }, (err) => cb(err, UPLOAD_DIR));
     },
     filename: (req, file, cb) => {
         cb(null, `${Date.now()}-${file.originalname}`);
